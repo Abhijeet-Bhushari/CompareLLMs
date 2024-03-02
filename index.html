@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Text-to-Text LLM Models</title>
+
+  <link rel="stylesheet" href="styles.css">
+  <script src = "index.js" defer></script>
+</head>
+
+<body>
+  <div class="container">
+    <label for="prompt">Enter Prompt:</label>
+    <input type="text" id="prompt" placeholder="Enter your prompt here..." />
+    <button onclick="getResponse()">Get Response</button>
+
+    <div id="response-container">
+      <h3>google/flan-t5-large</h3>
+      <div id="model1-response"></div>
+      <h3>google/flan-t5-base</h3>
+      <div id="model2-response"></div>
+    </div>
+  </div>
+</body>
+</html>
