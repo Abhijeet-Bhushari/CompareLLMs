@@ -1,65 +1,120 @@
-
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-    <meta name="description" content="" />
-    <meta name="author" content="" />
-    <title>Landing Page - Start Bootstrap Theme</title>
-    <!-- Favicon-->
-    <link rel="icon" type="image/x-icon" href="assets/favicon.ico" />
-    <!-- Bootstrap icons-->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css" rel="stylesheet" type="text/css" />
-    <!-- Google fonts-->
-    <link href="https://fonts.googleapis.com/css?family=Lato:300,400,700,300italic,400italic,700italic" rel="stylesheet" type="text/css" />
-    <!-- Core theme CSS (includes Bootstrap)-->
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0-alpha.4/css/bootstrap.min.css" rel="stylesheet" />
-</head>
-<body>
-  <br>
-  <!-- Masthead-->
-  <div class="container">
-    <section class="features-icons bg-light text-center">
-      <div class="row">
-        <div class="col-12">
-          <h1 class="mb-6">Compare Generative AI</h1>
-        </div>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Text-to-Text LLM Models</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+      }
+      .container {
+        max-width: 600px;
+        margin: 50px auto;
+        padding: 20px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      }
+      label {
+        font-weight: bold;
+      }
+      input[type="text"] {
+        width: 100%;
+        padding: 10px;
+        margin-bottom: 10px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        box-sizing: border-box;
+      }
+      button {
+        background-color: #007bff;
+        color: #fff;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 5px;
+        cursor: pointer;
+      }
+      button:hover {
+        background-color: #0056b3;
+      }
+      #response-container {
+        margin-top: 20px;
+      }
+      #model1-response,
+      #model2-response {
+        margin-top: 10px;
+        border: 1px solid #ccc;
+        padding: 10px;
+        border-radius: 5px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <label for="prompt">Enter Prompt:</label>
+      <input type="text" id="prompt" placeholder="Enter your prompt here..." />
+      <button onclick="getResponse()">Get Response</button>
+
+      <div id="response-container">
+        <h3>google/flan-t5-large</h3>
+        <div id="model1-response"></div>
+        <h3>LLM2</h3>
+        <div id="model2-response"></div>
       </div>
-      <form action="\submit-prompt" method="post" id="submission-form">
-        <div class="row">
-        <div class="col-md-6">
-          <input class="form-control form-control-lg" id="prompt" name="prompt-input" type="text" placeholder="Prompt" data-sb-validations="required" />
-        </div>
-        <div class="col-md-4">
-          <button class="btn btn-primary btn-lg" id="submitButton" type="submit">Submit</button>
-        </div>
-        </div>
-      </form>
-    </section>
-  </div>
-  <br>
-<!-- Icons Grid-->
-<section class="features-icons bg-light text-center">
-  <div class="container">
-      <div class="row">
-        <div class="col-lg-12">
-          <h2>
-            Prompt: {{ prompt|default("...") }}
-          </h2>
-        </div>
-      </div>
-      <div class="row">
-          <div class="col-lg-6">
-            <h3>Stable Diffusion v1-5</h3>
-            <!-- <img src="{{ generated_image|default("...", true) }}" class="mainImg" alt="Generated Image"> -->
-          </div>
-          <div class="col-lg-6">
-              <h3>Google flan-t5-xl</h3>
-              <p>{{ generated_text|default("...") }}</p>
-          </div>
-      </div>
-  </div>
-</section>
-</body>
+    </div>
+
+    <script>
+      async function query1(data) {
+        const response = await fetch(
+          "https://api-inference.huggingface.co/models/google/flan-t5-large",
+          {
+            headers: {
+              Authorization: "Bearer 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",
+            },
+            method: "POST",
+            body: JSON.stringify(data),
+          }
+        );
+        const result = await response.json();
+        return result;
+      }
+
+      async function query2(data) {
+        const response = await fetch(
+          "https://api-inference.huggingface.co/models/google/flan-t5-xxl",
+          {
+            headers: {
+              Authorization: "Bearer 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",
+            },
+            method: "POST",
+            body: JSON.stringify(data),
+          }
+        );
+        const result = await response.json();
+        return result;
+      }
+
+      async function getResponse() {
+        const prompt = document.getElementById("prompt").value;
+        try {
+          query1({ inputs: prompt }).then((response1) => {
+            document.getElementById("model1-response").innerText =
+              response1[0].generated_text;
+            console.log(JSON.stringify(response1));
+          });
+
+          query2({ inputs: prompt }).then((response2) => {
+            document.getElementById("model2-response").innerText =
+              response2[0].generated_text;
+            console.log(JSON.stringify(response2));
+          });
+        } catch (error) {
+          console.error("Error:", error);
+        }
+      }
+    </script>
+  </body>
 </html>
