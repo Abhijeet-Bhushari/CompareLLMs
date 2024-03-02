@@ -1,4 +1,4 @@
-torch==2.2.1
+torch==2.1.0
 diffusers==0.26.3
 sentencepiece
 jedi
